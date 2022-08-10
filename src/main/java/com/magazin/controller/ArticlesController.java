@@ -32,8 +32,13 @@ public class ArticlesController {
                        @AuthenticationPrincipal User user) {
 
         List<Article> allArticles = articlesDAO.getAll();
+        List<Article> articles;
 
-        List<Article> articles = allArticles.subList(0, mainQuery.getLimit());
+        if (allArticles.size() > mainQuery.getLimit()) {
+            articles = allArticles.subList(0, mainQuery.getLimit());
+        } else {
+            articles = allArticles;
+        }
 
         int pages = (int) Math.ceil((double)allArticles.size()/(double)mainQuery.getLimit());
         List<Offer> offers = offersDAO.getAll();
