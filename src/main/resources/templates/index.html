@@ -1,69 +1,67 @@
-<div th:replace="header">...</div>
+<th:block th:include="header">...</th:block>
 <form action="cauta" method="GET" th:object="${mainQuery}">
 	<div id="cauta">
 		<button type="submit">Caută:</button>
-		<input name="text"/>
+		<input name="text" th:value="${mainQuery != null ? mainQuery.text : ''}"/>
 	</div>
 	<aside id="asideLeft" class="mt-2 mb-2">
 		<p>Categorii:</p>
-		<div class="inline-block"><input type="checkbox" name="pesti" value="pesti" id="pesti" onclick="form.submit()"/><label for="pesti" >Pești</label></div>
-		<div class="inline-block"><input type="checkbox" name="hrana" value="hrana" id="hrana" onclick="form.submit()"/><label for="hrana" >Hrană</label></div>
-		<div class="inline-block"><input type="checkbox" name="accesorii" value="accesorii" id="acc" onclick="form.submit()"/><label for="acc">Accesorii</label></div>
-		<input type="checkbox" name="acv" value="acv" id="acv" onclick="form.submit()"/><label for="acv">Acvarii</label><br>
+		<div class="inline-block"><input th:checked="${mainQuery != null && mainQuery.pesti != ''}" type="checkbox" name="pesti" value="pesti" id="pesti" onclick="form.submit()"/><label for="pesti" >Pești</label></div>
+		<div class="inline-block"><input th:checked="${mainQuery != null && mainQuery.hrana != ''}" type="checkbox" name="hrana" value="hrana" id="hrana" onclick="form.submit()"/><label for="hrana" >Hrană</label></div>
+		<div class="inline-block"><input th:checked="${mainQuery != null && mainQuery.accesorii != ''}" type="checkbox" name="accesorii" value="accesorii" id="acc" onclick="form.submit()"/><label for="acc">Accesorii</label></div>
+		<input th:checked="${mainQuery != null && mainQuery.acv != ''}" type="checkbox" name="acv" value="acv" id="acv" onclick="form.submit()"/><label for="acv">Acvarii</label><br>
 		<p>Sortare:</p>
-		<div class="inline-block"><input type="radio" name="order" value="nume" id="den" onclick="form.submit()"/><label for="den">Denumire</label></div>
-		<input type="radio" name="order" value="pret" id="pret" onclick="form.submit()"/><label for="pret">Preț</label><br>
+		<div class="inline-block"><input th:checked="${mainQuery != null && mainQuery.order == 'nume'}" type="radio" name="order" value="nume" id="den" onclick="form.submit()"/><label for="den">Denumire</label></div>
+		<input th:checked="${mainQuery != null && mainQuery.order == 'pret'}" type="radio" name="order" value="pret" id="pret" onclick="form.submit()"/><label for="pret">Preț</label><br>
 	</aside>
-<!--	<aside id="asideRight">-->
-<!--		<div class="carousel slide" data-ride="carousel">-->
-<!--		  <div class="carousel-inner">-->
-<!--			<c:set var="i" value="0"/>-->
-<!--			<c:forEach var="offer" items="${offers}">-->
-<!--				<c:choose>-->
-<!--					<c:when test="${i==0}">-->
-<!--						 <div class="carousel-item active">-->
-<!--						  <img class="d-block w-100" src="${offers[i].url}" alt="First slide">-->
-<!--						</div>-->
-<!--					</c:when>-->
-<!--					<c:otherwise>-->
-<!--						<div class="carousel-item">-->
-<!--						  <img class="d-block w-100" src="${offers[i].url }">-->
-<!--						</div>-->
-<!--					</c:otherwise>-->
-<!--				</c:choose>-->
-<!--				<c:set var="i" value="${i+1}"/>-->
-<!--			 </c:forEach>-->
-<!--		  </div>-->
-<!--		</div>-->
-<!--	</aside>-->
-<!--	<div id=main>-->
-<!--		<c:forEach items="${articles}" var="article">-->
-<!--			<a href="descriere?id=${article.id}" class="article">-->
-<!--				<span class="img"><img src="${article.imageURL}"></span>-->
-<!--				<span class="name">${article.name}</span>-->
-<!--				<span class="price">Preț: ${article.price} lei</span>-->
-<!--			</a>-->
-<!--		</c:forEach>-->
-<!--	</div>-->
-<!--	<div id="paging">-->
-<!--		<c:choose>-->
-<!--			<c:when test="${page==1}">-->
-<!--				<button type="submit" name="page" value="${page}">&lt;-</button>-->
-<!--			</c:when>-->
-<!--			<c:otherwise>-->
-<!--				<button type="submit" name="page" value="${page-1}">&lt;-</button>-->
-<!--			</c:otherwise>-->
-<!--		</c:choose>-->
-<!--		<span>Pagina ${page} din ${pages}</span>-->
-<!--		<c:choose>-->
-<!--			<c:when test="${page==pages}">-->
-<!--				<button type="submit" name="page" value="${page}">-&gt;</button>-->
-<!--			</c:when>-->
-<!--			<c:otherwise>-->
-<!--				<button type="submit" name="page" value="${page+1}">-&gt;</button>-->
-<!--			</c:otherwise>-->
-<!--		</c:choose>-->
-<!--	</div>-->
+	<aside id="asideRight">
+		<div class="carousel slide" data-ride="carousel">
+		  <div class="carousel-inner">
+
+			<th:block th:each="offer, k: ${offers}">
+
+				<th:block th:if="${k.index==0}">
+					 <div class="carousel-item active">
+					  <img class="d-block w-100" th:src="'/uploads/offers/' + ${offers[k.index].url}" alt="First slide">
+					</div>
+				</th:block>
+				<th:block th:unless="${k.index==0}">
+					<div class="carousel-item">
+					  <img class="d-block w-100" th:src="'/uploads/offers/' + ${offers[k.index].url }">
+					</div>
+				</th:block>
+
+			 </th:block>
+		  </div>
+		</div>
+	</aside>
+	<div id=main>
+		<th:block th:each="article: ${articles}">
+			<a th:href="'descriere?id=' +${article.id}" class="article">
+				<span class="img"><img th:src="'/uploads/' + ${article.imageURL}"></span>
+				<span class="name" th:text="${article.name}"></span>
+				<span class="price" th:text="'Preț: ' + ${article.price} + ' lei'"></span>
+			</a>
+		</th:block>
+	</div>
+	<div id="paging">
+
+		<th:block th:if="${page==1}">
+			<button type="submit" name="page" value="${page}">&lt;-</button>
+		</th:block>
+		<th:block th:unless="${page==1}">
+			<button type="submit" name="page" value="${page-1}">&lt;-</button>
+		</th:block>
+
+		<span th:text="'Pagina '+${page}+' din '+${pages}"></span>
+
+		<th:block th:if="${page==pages}">
+			<button type="submit" name="page" value="${page}">-&gt;</button>
+		</th:block>
+		<th:block th:unless="${page==pages}">
+			<button type="submit" name="page" value="${page+1}">-&gt;</button>
+		</th:block>
+
+	</div>
 </form>
-<!--<div th:replace="footer::footer">...</div>-->
-<!--<c:import url="footer.jsp"/>-->
+<th:block th:include="footer">...</th:block>

@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="ro">
+    <head>
+        <meta charset="utf-8">
+        <title>Magazin acvaristică</title>
+        <link rel="stylesheet" href="/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/css/style.css">
+        <link rel="shortcut icon" href="/img/fav.ico">
+        <script src="/js/popper.min.js"></script>
+        <script src="/js/jquery-3.3.1.min.js"></script>
+        <script src="/js/bootstrap.min.js"></script>
+        <script src="/js/script.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+		<ul>
+			<li class="startStyle"><a href="/admin/optiuni">Dashboard</a></li>
+		</ul>
+		<form th:object="${file}" action="/admin/optiuni/oferte" method="POST" enctype="multipart/form-data">
+			<input type="file" name="file"/><br>
+			Lățime imagine :170px
+			<button type="submit">Adaugă</button>
+		</form>
+		<p th:text="${msg}"></p>
+		<th:block th:each="offer: ${offers}">
+			<article class="offersAdmin">
+				<img th:src="'/uploads/offers/'+${offer.url}"/>
+				<p><a class="offerDelete" th:href ="'/admin/optiuni/oferte/sterge?id='+${offer.id}">Șterge</a></p>
+			</article>
+		</th:block>
+	</body>
+</html>

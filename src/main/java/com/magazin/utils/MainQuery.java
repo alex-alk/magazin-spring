@@ -56,7 +56,7 @@ public class MainQuery {
         this.pesti = pesti;
     }
     public boolean nothingSelected() {
-        if(pesti==null&&hrana==null&&acv==null&&accesorii==null)return true;return false;
+        return pesti.equals("") && hrana.equals("") && acv.equals("") && accesorii.equals("");
     }
     public String orderBy() {
         if(order!=null) {

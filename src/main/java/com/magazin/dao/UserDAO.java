@@ -1,15 +1,14 @@
 package com.magazin.dao;
 
+import com.magazin.model.Article;
 import com.magazin.model.User;
 import com.magazin.repository.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
+import java.util.Optional;
 
 @Service
 public class UserDAO {
@@ -25,8 +24,13 @@ public class UserDAO {
         return userRepository.findByEmail(email);
     }
 
-    public User getClientById(long id){
-        return userRepository.getReferenceById(id);
+    public User getClientById(Long id){
+        Optional<User> user = userRepository.findById(id);
+        if (user.isPresent()) {
+            return user.get();
+        } else {
+            throw new EntityNotFoundException("User not found");
+        }
     }
 
     public void saveClient (User user) {

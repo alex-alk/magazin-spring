@@ -1,0 +1,20 @@
+<th:block th:include="header">...</th:block>
+    <body>
+    	<form action="/inregistrare" id="login" method="POST" th:object="${client}">
+	    	<label>Nume:</label><br>
+	    	<input name="familyName"/><br>
+	    	<label>Prenume:</label><br>
+    		<input name="firstName"/><br>
+    		<label>Telefon:</label><br>
+    		<input name="tel"/><br>
+    		<label>Adresa email</label>
+    		<input name="email"/><br>
+    		<label>Parola:</label><br>
+    		<input type="password" name="password" id="conf1"/><br>
+    		<label>Confirmă parola:</label><br>
+    		<input  type="password" id="conf2" name="confirmation"><br>
+    		<p style="color: green; font-weight: bold" th:text="${msg}"></p>
+    		<button type="submit">Înregistrare</button><br>
+    	</form>
+    	<p></p>
+<th:block th:include="footer">...</th:block>

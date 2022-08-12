@@ -12,7 +12,7 @@ public class Order {
     private int quantity;
 
     @Column(name="client_id")
-    private int clientId;
+    private Long clientId;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,11 +34,11 @@ public class Order {
         this.quantity = quantity;
     }
 
-    public int getClientiId() {
+    public Long getClientiId() {
         return this.clientId;
     }
 
-    public void setClientId(int clientId) {
+    public void setClientId(Long clientId) {
         this.clientId = clientId;
     }
 

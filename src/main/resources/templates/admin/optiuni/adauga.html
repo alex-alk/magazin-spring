@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ro">
+    <head>
+        <meta charset="utf-8">
+        <title>Magazin acvaristică</title>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" href="/css/font-awesome.min.css">
+        <link rel="stylesheet" href="/css/codemirror.min.css">
+        <link rel="stylesheet" href="/css/froala_editor.pkgd.min.css">
+        <link rel="stylesheet" href="/css/froala_style.min.css">
+        <link rel="stylesheet" href="/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/css/style.css">
+        <link rel="shortcut icon" href="/img/fav.ico">
+        <script src="/js/popper.min.js"></script>
+        <script src="/js/jquery-3.3.1.min.js"></script>
+        <script src="/js/bootstrap.min.js"></script>
+        <script src="/js/codemirror.min.js"></script>
+        <script src="/js/xml.min.js"></script>
+        <script src="/js/froala_editor.pkgd.min.js"></script>
+        <script src="/js/script.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+		<ul>
+			<li class="startStyle"><a href="/admin/optiuni">Dashboard</a></li>
+		</ul>
+		<form action="/admin/optiuni/articolUpload" method="POST" enctype="multipart/form-data" th:object="${articolUpload}">
+			<table id="tableAdd">
+				<tr>
+					<td>  
+						<input type="file" name="file"/><br>
+						<p>Dim: 160px X 160px</p>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<p>Denumire:</p>
+						<input name="name"/>
+						<input type="hidden" name="id" value="0"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<p>Preț:</p>
+						<input type="number" name="priceStr"/> lei
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<p>Categorie:</p>
+						<select name="category">
+							<option value="pesti">Pești</option>
+							<option value="hrana">Hrană</option>
+							<option value="accesorii">Accesorii</option>
+							<option value="acv">Acvarii</option>
+						</select>
+					</td>
+				</tr>
+			</table>
+			<p style="color:green;font-weight:bold;margin-left:10px" th:text="${msg}"></p>
+			<span id="d">Descriere:</span>
+			<textarea name="description" id="jedit"></textarea>
+			<button type="submit" style="margin-left: 10px">Adaugă</button>
+		</form>
+		<footer>
+			<p id="time"></p>
+		</footer>
+	</body>
+</html>

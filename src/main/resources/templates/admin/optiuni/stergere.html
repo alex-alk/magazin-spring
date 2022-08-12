@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ro">
+    <head>
+        <meta charset="utf-8">
+        <title>Magazin acvaristică</title>
+        <link rel="stylesheet" href="/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/css/style.css">
+        <link rel="shortcut icon" href="/img/fav.ico">
+        <script src="/js/popper.min.js"></script>
+        <script src="/js/jquery-3.3.1.min.js"></script>
+        <script src="/js/bootstrap.min.js"></script>
+        <script src="/js/script.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    	<ul>
+    		<li class="startStyle"><a href="/admin/optiuni">Dashboard</a></li>
+    	</ul>
+		<form action="/admin/optiuni/stergere/cauta" method="GET" th:object="${mainQuery}">
+			<div id="cauta">
+				<button type="submit">Caută:</button>
+				<input name="text" th:value="${mainQuery != null ? mainQuery.text : ''}"/>
+			</div>
+			<aside id="asideLeft">
+				<p>Categorii:</p>
+				<input th:checked="${mainQuery != null && mainQuery.pesti != ''}" type="checkbox" name="pesti" value="pesti" id="pesti" onclick="form.submit()"/><label for="pesti" >Pești</label><br>
+				<input th:checked="${mainQuery != null && mainQuery.hrana != ''}" type="checkbox" name="hrana" value="hrana" id="hrana" onclick="form.submit()"/><label for="hrana" >Hrană</label><br>
+				<input th:checked="${mainQuery != null && mainQuery.accesorii != ''}" type="checkbox" name="accesorii" value="accesorii" id="acc" onclick="form.submit()"/><label for="acc">Accesorii</label><br>
+				<input th:checked="${mainQuery != null && mainQuery.acv != ''}" type="checkbox" name="acv" value="acv" id="acv" onclick="form.submit()"/><label for="acv">Acvarii</label><br>
+				<p>Sortare:</p>
+				<input th:checked="${mainQuery != null && mainQuery.order == 'nume'}"  type="radio" name="order" value="nume" id="nume" onclick="form.submit()"/><label for="nume">Denumire</label><br>
+				<input th:checked="${mainQuery != null && mainQuery.order == 'pret'}"  type="radio" name="order" value="pret" id="pret" onclick="form.submit()"/><label for="pret">Preț</label><br>
+			</aside>
+		</form>
+	    <div id=main>
+			<th:block th:each="article: ${articles}">
+				<a th:href="'/admin/optiuni/sterge?id='+${article.id}" class="article">
+					<span class="img"><img th:src="'/uploads/'+${article.imageURL}"></span>
+					<span class="name" th:text="${article.name}"></span>
+					<span class="price" th:text="'Preț: '+${article.price}+' lei'"></span>
+				</a>
+			</th:block>
+	    </div>
+    </body>
+</html>

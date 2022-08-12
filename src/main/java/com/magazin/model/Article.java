@@ -53,7 +53,7 @@ public class Article {
         this.imageURL = imageURL;
     }
 
-    public String getname() {
+    public String getName() {
         return this.name;
     }
 

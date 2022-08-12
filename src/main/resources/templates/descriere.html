@@ -1,0 +1,15 @@
+<th:block th:include="header">...</th:block>
+	<div class="description">
+		<article>
+			<div class="priceDescription">Preț: <span th:text="${article.price}"></span> lei</div>
+			<h3 th:text="${article.name}"></h3>
+			<img th:src="'/uploads/'+${article.imageURL}">
+			<p th:utext="${article.description}"></p>
+		</article>
+	</div>
+	<form action="/cos" method="POST">
+		<input type="hidden" name="idA" th:value="${article.id}">
+		<p style="color:red" th:text="${msg}"></p>
+		<button type="submit">Adaugă în coș</button>
+	</form>
+<th:block th:include="footer">...</th:block>

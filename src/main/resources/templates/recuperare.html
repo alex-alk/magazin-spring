@@ -1,0 +1,9 @@
+<th:block th:include="header">...</th:block>
+   	<form action="/recuperare" id="login" method="POST" th:object="${client}">
+   		<label>Adresa email</label>
+   		<input name="email"/><br>
+   		<p style="color:red" th:text="${msg}"></p>
+   		<button type="submit">Recuperare parolă</button>
+   	</form>
+   	<p></p>
+<th:block th:include="footer">...</th:block>

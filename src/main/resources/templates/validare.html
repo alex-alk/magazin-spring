@@ -1,0 +1,26 @@
+<th:block th:include="header">...</th:block>
+	<form action="/trimite" method="POST" th:object="${ordersForm}">
+		<div class="description">
+			<article>
+				<table id="validationTable">
+					<tr>
+						<th>Denumire</th>
+						<th>Preț</th>
+						<th>Cantitate</th>
+						<th>Cost</th>
+					</tr>
+					<th:block th:each="names, r: ${session.tableSend['names']}">
+						<tr>
+							<th:block th:each="table: ${session.tableSend}">
+									<td th:text="${table.value[r.index]}"></td>
+							</th:block>
+						</tr>
+					</th:block>
+				</table>
+					<input type="hidden" name="articleId" th:value="${ordersForm.articleId}"/>
+					<input type="hidden" name="quantity" th:value="${ordersForm.quantity}"/>
+			</article>
+			<button type="submit">Trimite comanda</button>
+		</div>
+	</form>
+<th:block th:include="footer">...</th:block>

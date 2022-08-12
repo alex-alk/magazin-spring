@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ro">
+    <head>
+        <meta charset="utf-8">
+        <title>Magazin acvaristică</title>
+        <link rel="stylesheet" href="/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/css/style.css">
+        <link rel="shortcut icon" href="/img/fav.ico">
+        <script src="/js/popper.min.js"></script>
+        <script src="/js/jquery-3.3.1.min.js"></script>
+        <script src="/js/bootstrap.min.js"></script>
+        <script src="/js/script.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+		<ul>
+			<li class="startStyle"><a href="/admin/optiuni">Dashboard</a></li>
+		</ul>
+    	<table id="validationTable">
+    		<tr>
+    			<th>Email</th>
+    			<th>Nume</th>
+    			<th>Telefon</th>
+    			<th>Produs</th>
+    			<th>Cantitate</th>
+    		</tr>
+			<th:block th:each="order: ${ordersTableList}">
+				<tr>
+					<td th:text="${order.email}"></td>
+					<td th:text="${order.name}"></td>
+					<td th:text="${order.tel}"></td>
+					<td th:text="${order.artName}"></td>
+					<td th:text="${order.quantity}"></td>
+					<td><a th:href="'/admin/optiuni/comenzi/sterge?id='+${order.orderId}">Șterge</a></td>
+				</tr>
+			</th:block>
+		</table>
+	</body>
+</html>

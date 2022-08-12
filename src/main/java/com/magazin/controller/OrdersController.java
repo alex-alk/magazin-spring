@@ -5,19 +5,14 @@ import com.magazin.dao.OrderDAO;
 import com.magazin.model.Article;
 import com.magazin.model.Order;
 import com.magazin.model.User;
-import com.magazin.utils.CookieUtil;
 import com.magazin.utils.OrdersForm;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 public class OrdersController {
@@ -30,34 +25,17 @@ public class OrdersController {
     }
 
     @GetMapping(value="/cos")
-    public String cosPageLink(User client, Model model, HttpServletRequest request, @AuthenticationPrincipal User user) {
+    public String cosPageLink(HttpServletRequest request) {
         HttpSession session = request.getSession();
-        if(user == null) {
-            Cookie[] cookies = request.getCookies();
-            String userId = CookieUtil.getCookieValue(cookies, "clientId");
-            if(userId.equals("")) {
-                model.addAttribute("client", client);
-                model.addAttribute("msg","Pentru a vizualiza coșul de cumpărături trebuie sa vă logați.");
-                return "/login";
-            }
-        }
+        System.out.println(session.getAttribute("tableSend"));
         return "/cos";
     }
 
-    @RequestMapping(value="/cos", method = RequestMethod.POST)
+    @PostMapping(value="/cos")
     public String cosPageFromDescription(Model model, @RequestParam("idA")Long id,
-                                         HttpServletRequest request, User client, @AuthenticationPrincipal User user) {
+                                         HttpServletRequest request) {
         HttpSession session = request.getSession();
 
-        if(user==null) {
-            Cookie[] cookies = request.getCookies();
-            String userId = CookieUtil.getCookieValue(cookies, "clientId");
-            if(userId.equals("")) {
-                model.addAttribute("client", client);
-                model.addAttribute("msg","Pentru a adăuga produse trebuie sa vă logați.");
-                return "/login";
-            }
-        }
         List<Article> articles;
         if(session.getAttribute("products")==null) {
             articles = new ArrayList<>();
@@ -104,15 +82,6 @@ public class OrdersController {
             return "/cos";
         }
 
-        if(user==null) {
-            Cookie[] cookies = request.getCookies();
-            String userId = CookieUtil.getCookieValue(cookies, "clientId");
-            if(userId.equals("")) {
-                model.addAttribute("client", client);
-                model.addAttribute("msg","Pentru a valida comanda trebuie sa vă logați.");
-                return "/login";
-            }
-        }
         String id="";
         String quantity="";
         List<String> names = new ArrayList<>();
@@ -123,7 +92,7 @@ public class OrdersController {
         for(Article product:products){
             id+= product.getId()+" ";
             quantity+=request.getParameter(product.getId()+"")+" ";;
-            names.add(product.getname());
+            names.add(product.getName());
             quantities.add(request.getParameter(product.getId()+""));
             prices.add(product.getPrice()+"");
             try {
@@ -138,7 +107,7 @@ public class OrdersController {
         ordersForm.setArticleId(id);
         ordersForm.setClientId(user.getId()+"");
 
-        Map<String,List<String>> tableSend = new LinkedHashMap<String, List<String>>();
+        Map<String,List<String>> tableSend = new LinkedHashMap<>();
         tableSend.put("names", names);
         tableSend.put("prices", prices);
         tableSend.put("quantities", quantities);
@@ -148,18 +117,21 @@ public class OrdersController {
         return "validare";
     }
     @RequestMapping(value = "/trimite", method = RequestMethod.POST)
-    public String send(HttpServletRequest request, Model model, Order order, @SessionAttribute(name="ordersForm") OrdersForm ordersForm) {
+    public String send(HttpServletRequest request,
+                       Model model,
+                       Order order,
+                       @SessionAttribute(name="ordersForm") OrdersForm ordersForm,
+                       @AuthenticationPrincipal User user) {
 
         String quantity = ordersForm.getQuantity();
         String idArticle = ordersForm.getArticleId();
         String[] quantityArray = quantity.split(" ");
         String[] idArticlesArray = idArticle.split(" ");
-        int idClientToEntity = Integer.parseInt(ordersForm.getClientId());
         int i = 0;
         for(String q: quantityArray) {
             int quantityToEntity = Integer.parseInt(q);
             Long idArticlesToEntity = Long.parseLong(idArticlesArray[i]);
-            order.setClientId(idClientToEntity);
+            order.setClientId(user.getId());
             order.setArticlesId(idArticlesToEntity);
             order.setQuantity(quantityToEntity);
             ordersDAO.addOrder(order);

@@ -14,45 +14,29 @@
     </head>
     <body>
     <header>
-<!--    	<ul>-->
-<!--    		<li><a href="/">Pagina de start</a></li>-->
-<!--    		<li><a href="/inregistrare">Înregistrare</a></li>-->
-<!--    		<sec:authorize var="loggedIn" access="isAuthenticated()" />-->
-<!--    		<c:choose>-->
-<!--    			<c:when test="${loggedIn}">-->
-<!--    				<li><a href="/login">Utilizator: <sec:authentication property="principal.email" /></a>-->
-<!--    				<li>-->
-<!--                        <form method="POST" action="/logout">-->
-<!--                            <input type="submit" value="Logout"/>-->
-<!--                        </form>-->
-<!--    			</c:when>-->
-<!--    			<c:otherwise>-->
-<!--    				<li><a href="/login">Intră în cont</a></li>-->
-<!--    			</c:otherwise>-->
-<!--    		</c:choose>-->
-<!--    	</ul>-->
-<!--    	<ul id=headerRight>-->
-<!--    		<li><a href="/cos"><img id="cos" src="/resources/img/cos.png">Coș de cumpărături-->
-<!--    		<c:set var="i" value="0"/>-->
-<!--    		<c:forEach var="count" items="${products}">-->
-<!--    			<c:set var="i" value="${i+1}"/>-->
-<!--    		</c:forEach>	-->
-<!--    		(${i})-->
-<!--    			</a></li>-->
-<!--    		<li><img id="call" src="/resources/img/call.png">Comenzi telefonice: <p>0740.000.000</p></li>-->
-<!--    	</ul>-->
+    	<ul>
+    		<li><a href="/">Pagina de start</a></li>
+    		<li><a href="/inregistrare">Înregistrare</a></li>
+
+            <th:block sec:authorize="isAuthenticated()">
+                <li><a href="/login">Utilizator: <span sec:authentication="principal.email"></span></a>
+                <li>
+                    <form method="POST" action="/logout">
+                        <input type="submit" value="Logout"/>
+                    </form>
+            </th:block>
+            <th:block sec:authorize="!isAuthenticated()">
+                <li><a href="/login">Intră în cont</a></li>
+            </th:block>
+    	</ul>
+    	<ul id=headerRight>
+    		<li>
+                <a href="/cos"><img id="cos" src="/img/cos.png">Coș de cumpărături
+                <th:block th:if="${session.products != null}">(<span th:text="${session.products.size()}"></span>)</th:block>
+    			</a>
+            </li>
+    		<li><img id="call" src="/img/call.png">Comenzi telefonice: <p>0740.000.000</p></li>
+    	</ul>
     	<img id="headerImg" src="/img/header.png">
     	<h1>Magazin acvaristică</h1>
     </header>
-
-
-
-    <footer>
-        <p id="time"></p>
-    </footer>
-    <script src="/js/jquery-3.3.1.min.js"></script>
-    <script src="/js/popper.min.js"></script>
-    <script src="/js/bootstrap.min.js"></script>
-    <script src="/js/script.js"></script>
-    </body>
-</html>

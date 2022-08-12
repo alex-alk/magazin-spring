@@ -5,9 +5,11 @@ import com.magazin.dao.OrderDAO;
 import com.magazin.dao.UserDAO;
 import com.magazin.model.Article;
 import com.magazin.model.Order;
+import com.magazin.model.User;
 import com.magazin.utils.ArticlesUpload;
 import com.magazin.utils.MainQuery;
 import com.magazin.utils.OrdersTable;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -50,28 +52,32 @@ public class AdminController {
         return "/admin/optiuni/editeaza";
     }
     @PostMapping(value="/admin/optiuni/editeaza")
-    public String editArticle(Model model, @ModelAttribute("articolUpload")ArticlesUpload articlesUpload, HttpServletRequest request) throws IOException {
+    public String editArticle(Model model,
+                              @ModelAttribute("articolUpload")ArticlesUpload articlesUpload,
+                              @Value("${file-uploads}") String location) throws IOException {
         MultipartFile file = articlesUpload.getFile();
+        Article article = articlesDAO.getArticleById(articlesUpload.getId());
+        model.addAttribute("articol", article);
         if(articlesUpload.isNotValid()) {
             model.addAttribute("msg","Toate câmpurile sunt obligatorii");
             return "/admin/optiuni/editeaza";
         }
         if (!file.getOriginalFilename().isEmpty()) {
             String fullFileName = file.getOriginalFilename();
-            Article article = articlesDAO.getArticleById(articlesUpload.getId());
+
             String fileName = fullFileName.substring(fullFileName.lastIndexOf("\\")+1, fullFileName.length());
             article.setCategory(articlesUpload.getCategory());
             article.setDescription(articlesUpload.getDescription());
-            article.setImageURL("/resources/uploads/" + fileName);
+            article.setImageURL(fileName);
             article.setName(articlesUpload.getName());
             article.setPrice(articlesUpload.getPrice());
             articlesDAO.updateArticle(article);
-            ServletContext sc = request.getServletContext();
             BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(
-                    new File(sc.getRealPath("/resources/uploads/"), fileName)));
+                    new File(location, fileName)));
             outputStream.write(file.getBytes());
             outputStream.flush();
             outputStream.close();
+            model.addAttribute("articol", article);
             model.addAttribute("msg", "Articol editat.");
         } else {
             model.addAttribute("msg", "Selectează un fișier");
@@ -87,8 +93,9 @@ public class AdminController {
 
     @PostMapping(value="/admin/optiuni/articolUpload")
     public String articlesUpload(Model model, @ModelAttribute("articolUpload")ArticlesUpload articlesUpload,
-                                 HttpServletRequest request, Article articol) throws IOException {
-        ServletContext sc = request.getServletContext();
+                                 HttpServletRequest request, Article articol,
+                                 @Value("${file-uploads}") String location) throws IOException {
+
         MultipartFile file = articlesUpload.getFile();
         if(articlesUpload.isNotValid()) {
             model.addAttribute("msg","Toate câmpurile sunt obligatorii");
@@ -97,7 +104,8 @@ public class AdminController {
         if (!file.getOriginalFilename().isEmpty()) {
             String fullFileName = file.getOriginalFilename();
             String fileName = fullFileName.substring(fullFileName.lastIndexOf("\\")+1, fullFileName.length());
-            final File folder = new File(sc.getRealPath("/resources/uploads/"));
+
+            final File folder = new File(location);
             for (final File fileEntry : folder.listFiles()) {
                 if(fileEntry.getName().equals(fileName)) {
                     model.addAttribute("msg", "Fișierul există deja");
@@ -106,14 +114,12 @@ public class AdminController {
             }
             articol.setCategory(articlesUpload.getCategory());
             articol.setDescription(articlesUpload.getDescription());
-            articol.setImageURL("/resources/uploads/" + fileName);
+            articol.setImageURL(fileName);
             articol.setName(articlesUpload.getName());
             articol.setPrice(articlesUpload.getPrice());
             articlesDAO.addArticle(articol);
             BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(
-                    new File(sc.getRealPath("/resources/uploads/"), fileName)));
-            System.out.println(fileName);
-            System.out.println(sc.getRealPath("/resources/uploads/"));
+                    new File(location, fileName)));
             outputStream.write(file.getBytes());
             outputStream.flush();
             outputStream.close();
@@ -176,10 +182,11 @@ public class AdminController {
         List<OrdersTable> ordersTableList = new ArrayList<>();
         for(Order order:orders) {
             ordersTable= new OrdersTable();
-            ordersTable.setEmail(clientsDAO.getClientById(order.getClientiId()).getEmail());
-            ordersTable.setName(clientsDAO.getClientById(order.getClientiId()).getFamilyName());
-            ordersTable.setTel(clientsDAO.getClientById(order.getClientiId()).getTel());
-            ordersTable.setArtName(articlesDAO.getArticleById(order.getArticlesId()).getname());
+            User user = clientsDAO.getClientById(order.getClientiId());
+            ordersTable.setEmail(user.getEmail());
+            ordersTable.setName(user.getFamilyName());
+            ordersTable.setTel(user.getTel());
+            ordersTable.setArtName(articlesDAO.getArticleById(order.getArticlesId()).getName());
             ordersTable.setQuantity(order.getQuantity()+"");
             ordersTable.setOrderId(order.getId()+"");
             ordersTableList.add(ordersTable);
@@ -199,7 +206,7 @@ public class AdminController {
             ordersTable.setEmail(clientsDAO.getClientById(order.getClientiId()).getEmail());
             ordersTable.setName(clientsDAO.getClientById(order.getClientiId()).getFamilyName());
             ordersTable.setTel(clientsDAO.getClientById(order.getClientiId()).getTel());
-            ordersTable.setArtName(articlesDAO.getArticleById(order.getArticlesId()).getname());
+            ordersTable.setArtName(articlesDAO.getArticleById(order.getArticlesId()).getName());
             ordersTable.setQuantity(order.getQuantity()+"");
             ordersTable.setOrderId(order.getId()+"");
             ordersTableList.add(ordersTable);

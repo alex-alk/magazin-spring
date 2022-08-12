@@ -5,12 +5,10 @@ import com.magazin.model.Offer;
 import com.magazin.utils.ArticlesUpload;
 import com.magazin.utils.MainQuery;
 import com.magazin.utils.OffersUpload;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -46,15 +44,18 @@ public class OffersController {
         return "/admin/optiuni/oferte";
     }
 
-    @RequestMapping(value="/admin/optiuni/oferte", method = RequestMethod.POST)
-    public String addOffers(Model model, @ModelAttribute(name="file") OffersUpload articlesUpload, ArticlesUpload fileA,
+    @PostMapping(value="/admin/optiuni/oferte")
+    public String addOffers(Model model,
+                            @ModelAttribute(name="file") OffersUpload articlesUpload,
+                            ArticlesUpload fileA,
+                            @Value("${file-uploads}") String location,
                             Offer offer, HttpServletRequest request)throws IOException {
-        ServletContext sc = request.getServletContext();
+
         MultipartFile file = articlesUpload.getFile();
         if (!file.getOriginalFilename().isEmpty()) {
             String fullFileName = file.getOriginalFilename();
             String fileName = fullFileName.substring(fullFileName.lastIndexOf("\\")+1, fullFileName.length());
-            final File folder = new File(sc.getRealPath("/resources/offers/"));
+            final File folder = new File(location + "/offers/");
             for (final File fileEntry : folder.listFiles()) {
                 if(fileEntry.getName().equals(fileName)) {
                     List<Offer> offers = offersDAO.getAll();
@@ -64,12 +65,11 @@ public class OffersController {
                     return "/admin/optiuni/oferte";
                 }
             }
-            offer.setUrl("/resources/offers/"+fileName);
+            offer.setUrl(fileName);
             offersDAO.addOffer(offer);
 
-            System.out.println(sc.getRealPath("/"));
             BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(
-                    new File(sc.getRealPath("/resources/offers/"), fileName)));
+                    new File(location + "/offers/", fileName)));
             outputStream.write(file.getBytes());
             outputStream.flush();
             outputStream.close();
@@ -85,13 +85,14 @@ public class OffersController {
         return "/admin/optiuni/oferte";
     }
     @RequestMapping(value="/admin/optiuni/oferte/sterge",method = RequestMethod.GET)
-    public String deleteOffer(Model model, @RequestParam("id")Long id, HttpServletRequest request, Offer offer,
-                              ArticlesUpload fileA) throws IOException {
-        ServletContext sc = request.getServletContext();
+    public String deleteOffer(Model model, @RequestParam("id")Long id,
+                              HttpServletRequest request, Offer offer,
+                              ArticlesUpload fileA,
+                              @Value("${file-uploads}") String location) throws IOException {
 
         model.addAttribute("mainQuery", mainQuery);
         Offer articol = offersDAO.getOfferById(id);
-        File file = new File(sc.getRealPath("/") + articol.getUrl());
+        File file = new File(location + "/offers/" + articol.getUrl());
         file.delete();
         offer = offersDAO.getOfferById(id);
         offersDAO.deleteOffer(offer);

@@ -62,6 +62,7 @@ public class ArticlesController {
         model.addAttribute("page", mainQuery.getPage());
         model.addAttribute("pages", pages);
         model.addAttribute("articles", articles);
+        model.addAttribute("mainQuery", mainQuery);
         return "/index";
     }
 

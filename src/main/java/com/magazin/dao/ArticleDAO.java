@@ -45,15 +45,16 @@ public class ArticleDAO {
             q.select(c).where(cb.like(c.get("name"), "%"+mainQuery.getText()+"%"))
                     .orderBy(cb.asc(c.get(mainQuery.orderBy())));
         }else {
-            q.select(c).where(
-                            cb.or(
-                                    cb.equal(c.get("category"), mainQuery.getPesti()),
-                                    cb.equal(c.get("category"), mainQuery.getHrana()),
-                                    cb.equal(c.get("category"), mainQuery.getAcv()),
-                                    cb.equal(c.get("category"), mainQuery.getAccesorii())
-                            ),cb.like(c.get("name"), "%"+mainQuery.getText()+"%")
-                    )
-                    .orderBy(cb.asc(c.get(mainQuery.orderBy())));
+            q.select(c)
+                .where(
+                    cb.or(
+                            cb.equal(c.get("category"), mainQuery.getPesti()),
+                            cb.equal(c.get("category"), mainQuery.getHrana()),
+                            cb.equal(c.get("category"), mainQuery.getAcv()),
+                            cb.equal(c.get("category"), mainQuery.getAccesorii())
+                    ),cb.like(c.get("name"), "%"+mainQuery.getText()+"%")
+                )
+                .orderBy(cb.asc(c.get(mainQuery.orderBy())));
         }
         TypedQuery<Article> articolQuery = em.createQuery(q)
                 .setFirstResult(mainQuery.getOffset())
@@ -73,15 +74,16 @@ public class ArticleDAO {
             q.select(c).where(cb.like(c.get("name"), "%"+mainQuery.getText()+"%"))
                     .orderBy(cb.asc(c.get(mainQuery.orderBy())));
         }else {
-            q.select(c).where(
-                            cb.or(
-                                    cb.equal(c.get("category"), mainQuery.getPesti()),
-                                    cb.equal(c.get("category"), mainQuery.getHrana()),
-                                    cb.equal(c.get("category"), mainQuery.getAcv()),
-                                    cb.equal(c.get("category"), mainQuery.getAccesorii())
-                            ),cb.like(c.get("name"), "%"+mainQuery.getText()+"%")
-                    )
-                    .orderBy(cb.asc(c.get(mainQuery.orderBy())));
+            q.select(c)
+                .where(
+                    cb.or(
+                            cb.equal(c.get("category"), mainQuery.getPesti()),
+                            cb.equal(c.get("category"), mainQuery.getHrana()),
+                            cb.equal(c.get("category"), mainQuery.getAcv()),
+                            cb.equal(c.get("category"), mainQuery.getAccesorii())
+                    ),cb.like(c.get("name"), "%"+mainQuery.getText()+"%")
+                )
+                .orderBy(cb.asc(c.get(mainQuery.orderBy())));
         }
         TypedQuery<Article> articolQuery = em.createQuery(q);
         List<Article> articles = articolQuery.getResultList();

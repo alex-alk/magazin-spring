@@ -33,9 +33,9 @@ public class SecurityConfig {
         return http
             .csrf().disable()
             .authorizeRequests()
-            .antMatchers("/cos").access("hasRole('USER')")
-            .antMatchers("/admin/**").access("hasRole('ADMIN')")
-            .antMatchers("/", "/**").access("permitAll()")
+            .antMatchers("/cos", "/validareComanda").access("hasRole('USER')")
+            .antMatchers("/admin/**","/admin/**/**","/admin/**/**/**").access("hasRole('ADMIN')")
+            .antMatchers("/", "/**", "/**/**").access("permitAll()")
             .and()
             .formLogin()
             .loginPage("/login")

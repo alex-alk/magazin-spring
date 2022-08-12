@@ -1,0 +1,30 @@
+<th:block th:include="header">...</th:block>
+	<form action="/validareComanda" method="POST">
+		<th:block th:each="article, k: ${session.products}">
+			<div class="articlesInCart">
+				<article>
+					<img th:src ="'/uploads/'+${article.imageURL}">
+					<span class="priceDescription">Preț: <span th:text="${article.price}"></span> lei</span>
+					<p class="articleInCartName" th:text="${article.name}"></p>
+					<span class="quantity">Cantitatea: </span>
+						<th:block th:if="${session.tableSend != null && session.tableSend['quantities'].size() > k.index}">
+							<input type="number" th:name="${article.id}" th:value="${session.tableSend['quantities'][k.index]}">
+						</th:block>
+						<th:block th:unless="${session.tableSend != null && session.tableSend['quantities'].size() > k.index}">
+							<input type="number" th:name="${article.id}" th:value=1>
+						</th:block>
+					<a th:href="'/stergeDinCos?idA='+${article.id}" class="remove">Eliminare produs</a>
+				</article>
+			</div>
+		</th:block>
+		<br><span style="color:red" th:text="${msg}"></span>
+
+			<th:block th:if="${session.products == null}">
+				<h4 style="text-align: center">Coșul de cumpărături este gol.</h4>
+			</th:block>
+			<th:block th:unless="${session.products == null}">
+				<button type="submit">Validare comandă</button>	
+			</th:block>
+
+	</form>
+<th:block th:include="footer">...</th:block>
