@@ -29,7 +29,7 @@ public class UsersController {
     @GetMapping(value="/inregistrare")
     public String registerPage(Model model, User client) {
         model.addAttribute("client", client);
-        return "/register";
+        return "register";
     }
 
     @PostMapping(value="/inregistrare")
@@ -37,16 +37,16 @@ public class UsersController {
 
         if (client.isNotValid()) {
             model.addAttribute("msg", "Toate câmpurile sunt obligatorii");
-            return "/register";
+            return "register";
         }
         if(!client.getPassword().equals(request.getParameter("confirmation"))) {
             model.addAttribute("msg", "Parolele nu corespund.");
-            return "/register";
+            return "register";
         }
         User clientDb = userDAO.getClientByEmail(client.getEmail());
         if(clientDb != null) {
             model.addAttribute("msg", "Adresa de email există deja.");
-            return "/register";
+            return "register";
         }
 
         userDAO.saveClient(client);
@@ -54,12 +54,12 @@ public class UsersController {
         client.setPassword(request.getParameter("confirmation"));
         model.addAttribute("client", client);
         model.addAttribute("msg", "Ați fost înregistrat cu succes.");
-        return "/login";
+        return "login";
     }
 
     @GetMapping(value="/login")
     public String loginPage() {
-        return "/login";
+        return "login";
     }
 
 //    @PostMapping(value="/intra")
@@ -77,12 +77,12 @@ public class UsersController {
 //            return "redirect:/";
 //        }
 //        model.addAttribute("msg", "Adresa de email nu corespunde cu parola");
-//        return "/login";
+//        return "login";
 //    }
     @RequestMapping(value="/recuperare", method = RequestMethod.GET)
     public String recoveryPage(User client, Model model) {
         model.addAttribute("client", client);
-        return "/recuperare";
+        return "recuperare";
     }
     @RequestMapping(value="/recuperare",method = RequestMethod.POST)
     public String rec(Model model, @ModelAttribute("client")User client, User clientForm) {
@@ -120,9 +120,9 @@ public class UsersController {
 //            }
 //
 //            model.addAttribute("msg", "Parola a fost trimisă pe adresa de email.");
-//            return "/login";
+//            return "login";
 //        }
         model.addAttribute("msg", "Adresa de email nu există.");
-        return "/recuperare";
+        return "recuperare";
     }
 }

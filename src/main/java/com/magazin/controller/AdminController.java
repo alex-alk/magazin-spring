@@ -40,7 +40,7 @@ public class AdminController {
 
     @GetMapping(value="admin/optiuni")
     public String adminOptionsPage() {
-        return "/admin/optiuni/index";
+        return "admin/optiuni/index";
     }
 
     @GetMapping(value="/admin/optiuni/editeaza")
@@ -49,7 +49,7 @@ public class AdminController {
         Article article = articlesDAO.getArticleById(id);
         model.addAttribute("articol", article);
         model.addAttribute("articolUpload", articlesUpload);
-        return "/admin/optiuni/editeaza";
+        return "admin/optiuni/editeaza";
     }
     @PostMapping(value="/admin/optiuni/editeaza")
     public String editArticle(Model model,
@@ -60,7 +60,7 @@ public class AdminController {
         model.addAttribute("articol", article);
         if(articlesUpload.isNotValid()) {
             model.addAttribute("msg","Toate câmpurile sunt obligatorii");
-            return "/admin/optiuni/editeaza";
+            return "admin/optiuni/editeaza";
         }
         if (!file.getOriginalFilename().isEmpty()) {
             String fullFileName = file.getOriginalFilename();
@@ -82,13 +82,13 @@ public class AdminController {
         } else {
             model.addAttribute("msg", "Selectează un fișier");
         }
-        return "/admin/optiuni/editeaza";
+        return "admin/optiuni/editeaza";
     }
 
     @GetMapping(value="/admin/optiuni/adauga")
     public String articleUploadPage(Model model, ArticlesUpload articlesUpload) {
         model.addAttribute("articolUpload", articlesUpload);
-        return "/admin/optiuni/adauga";
+        return "admin/optiuni/adauga";
     }
 
     @PostMapping(value="/admin/optiuni/articolUpload")
@@ -109,7 +109,7 @@ public class AdminController {
             for (final File fileEntry : folder.listFiles()) {
                 if(fileEntry.getName().equals(fileName)) {
                     model.addAttribute("msg", "Fișierul există deja");
-                    return "/admin/optiuni/adauga";
+                    return "admin/optiuni/adauga";
                 }
             }
             articol.setCategory(articlesUpload.getCategory());
@@ -127,7 +127,7 @@ public class AdminController {
         } else {
             model.addAttribute("msg", "Selectează un fișier");
         }
-        return "/admin/optiuni/adauga";
+        return "admin/optiuni/adauga";
     }
 
     //delete article
@@ -135,14 +135,14 @@ public class AdminController {
     public String deleteArticlePage(Model model) {
         model.addAttribute("articles",articlesDAO.getAll());
         model.addAttribute("mainQuery", mainQuery);
-        return "/admin/optiuni/stergere";
+        return "admin/optiuni/stergere";
     }
     @RequestMapping(value="/admin/optiuni/stergere/cauta",method = RequestMethod.GET)
     public String deleteArticlePageSearch(Model model, @ModelAttribute("mainQuery")MainQuery mainQuery){
 
         model.addAttribute("articles", articlesDAO.getArticlesByMainQuery(mainQuery));
         model.addAttribute("mainQuery", mainQuery);
-        return "/admin/optiuni/stergere";
+        return "admin/optiuni/stergere";
     }
 
     @RequestMapping(value="/admin/optiuni/sterge",method = RequestMethod.GET)
@@ -164,13 +164,13 @@ public class AdminController {
     public String editare(Model model) {
         model.addAttribute("mainQuery", mainQuery);
         model.addAttribute("articles", articlesDAO.getAll());
-        return "/admin/optiuni/editare";
+        return "admin/optiuni/editare";
     }
 
     @GetMapping(value="/admin/optiuni/editare/cauta")
     public String editareCauta(Model model, @ModelAttribute("mainQuery")MainQuery mainQuery) {
         model.addAttribute("articles", articlesDAO.getArticlesByMainQuery(mainQuery));
-        return "/admin/optiuni/editare";
+        return "admin/optiuni/editare";
     }
 
     @GetMapping(value="/admin/optiuni/comenzi")
@@ -192,7 +192,7 @@ public class AdminController {
             ordersTableList.add(ordersTable);
         }
         model.addAttribute("ordersTableList", ordersTableList);
-        return "/admin/optiuni/comenzi";
+        return "admin/optiuni/comenzi";
     }
     @GetMapping(value="/admin/optiuni/comenzi/sterge")
     public String deleteComenzi(Model model, @RequestParam("id")Long id, HttpServletRequest request) {
@@ -212,6 +212,6 @@ public class AdminController {
             ordersTableList.add(ordersTable);
         }
         model.addAttribute("ordersTableList", ordersTableList);
-        return "/admin/optiuni/comenzi";
+        return "admin/optiuni/comenzi";
     }
 }

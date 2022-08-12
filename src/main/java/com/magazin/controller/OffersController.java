@@ -41,7 +41,7 @@ public class OffersController {
         model.addAttribute("file", file);
         List<Offer> offers = offersDAO.getAll();
         model.addAttribute("offers", offers);
-        return "/admin/optiuni/oferte";
+        return "admin/optiuni/oferte";
     }
 
     @PostMapping(value="/admin/optiuni/oferte")
@@ -62,7 +62,7 @@ public class OffersController {
                     model.addAttribute("offers", offers);
                     model.addAttribute("file", fileA);
                     model.addAttribute("msg", "Fișierul există deja");
-                    return "/admin/optiuni/oferte";
+                    return "admin/optiuni/oferte";
                 }
             }
             offer.setUrl(fileName);
@@ -82,7 +82,7 @@ public class OffersController {
         List<Offer> offers = offersDAO.getAll();
         model.addAttribute("offers", offers);
         model.addAttribute("file", fileA);
-        return "/admin/optiuni/oferte";
+        return "admin/optiuni/oferte";
     }
     @RequestMapping(value="/admin/optiuni/oferte/sterge",method = RequestMethod.GET)
     public String deleteOffer(Model model, @RequestParam("id")Long id,
@@ -99,6 +99,6 @@ public class OffersController {
         model.addAttribute("offers", offersDAO.getAll());
         model.addAttribute("msg","Oferta a fost ștearsă.");
         model.addAttribute("file", fileA);
-        return "/admin/optiuni/oferte";
+        return "admin/optiuni/oferte";
     }
 }

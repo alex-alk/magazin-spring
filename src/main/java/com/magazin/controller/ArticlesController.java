@@ -49,7 +49,7 @@ public class ArticlesController {
         model.addAttribute("pages", pages);
         model.addAttribute("articles", articles);
         model.addAttribute("mainQuery", mainQuery);
-        return "/index";
+        return "index";
     }
 
     @GetMapping(value="/cauta")
@@ -63,7 +63,7 @@ public class ArticlesController {
         model.addAttribute("pages", pages);
         model.addAttribute("articles", articles);
         model.addAttribute("mainQuery", mainQuery);
-        return "/index";
+        return "index";
     }
 
 
@@ -71,7 +71,7 @@ public class ArticlesController {
     public String description(Model model, @RequestParam("id") Long id, @AuthenticationPrincipal User user) {
         model.addAttribute("article", articlesDAO.getArticleById(id));
         model.addAttribute("user", user);
-        return "/descriere";
+        return "descriere";
     }
 
 }

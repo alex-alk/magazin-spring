@@ -28,7 +28,7 @@ public class OrdersController {
     public String cosPageLink(HttpServletRequest request) {
         HttpSession session = request.getSession();
         System.out.println(session.getAttribute("tableSend"));
-        return "/cos";
+        return "cos";
     }
 
     @PostMapping(value="/cos")
@@ -47,7 +47,7 @@ public class OrdersController {
                 model.addAttribute("msg", "Articolul se află deja în coș.");
                 model.addAttribute("article",articlesDAO.getArticleById(id));
                 model.addAttribute("description", articlesDAO.getArticleById(id).getDescription());
-                return "/descriere";
+                return "descriere";
             }
         }
         articles.add(articlesDAO.getArticleById(id));
@@ -79,7 +79,7 @@ public class OrdersController {
         List<Article> products = (List<Article>)session.getAttribute("products");
         if(products==null) {
             model.addAttribute("msg", "Coșul de cumpărături este gol");
-            return "/cos";
+            return "cos";
         }
 
         String id="";
@@ -99,7 +99,7 @@ public class OrdersController {
                 Integer.parseInt(request.getParameter(product.getId()+""));
             }catch(Exception e) {
                 model.addAttribute("msg", "Cantitatea nu poate fi zero.");
-                return "/cos";
+                return "cos";
             }
             costs.add((Integer.parseInt(request.getParameter(product.getId()+""))*product.getPrice())+"");
         }
@@ -140,6 +140,6 @@ public class OrdersController {
         HttpSession session = request.getSession();
         session.removeAttribute("products");
         model.addAttribute("msg", "Comanda a fost trimisă. Produsele vor fi disponibile in magazin in 24h.");
-        return "/succes";
+        return "succes";
     }
 }
