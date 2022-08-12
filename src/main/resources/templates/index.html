@@ -56,10 +56,10 @@
 		<span th:text="'Pagina '+${page}+' din '+${pages}"></span>
 
 		<th:block th:if="${page==pages}">
-			<button type="submit" name="page" value="${page}">-&gt;</button>
+			<button type="submit" name="page" th:value="${page}">-&gt;</button>
 		</th:block>
 		<th:block th:unless="${page==pages}">
-			<button type="submit" name="page" value="${page+1}">-&gt;</button>
+			<button type="submit" name="page" th:value="${page+1}">-&gt;</button>
 		</th:block>
 
 	</div>
