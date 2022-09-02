@@ -2,7 +2,9 @@ package com.magazin.controller;
 
 import com.magazin.dao.UserDAO;
 import com.magazin.model.User;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.WebAttributes;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +16,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.Properties;
 
 @Controller
@@ -59,6 +62,20 @@ public class UsersController {
 
     @GetMapping(value="/login")
     public String loginPage() {
+        return "login";
+    }
+    @GetMapping(value="/login-error")
+    public String loginErrorPage(Model model, HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        String errorMessage = null;
+        if (session != null) {
+            AuthenticationException ex = (AuthenticationException) session
+                    .getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
+            if (ex != null) {
+                errorMessage = ex.getMessage();
+            }
+        }
+        model.addAttribute("msg", errorMessage);
         return "login";
     }
 
